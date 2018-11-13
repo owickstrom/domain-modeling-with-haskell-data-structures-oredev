@@ -9,6 +9,7 @@ import           PrettyPrint
 import           Project
 import           Reporting
 
+-- start snippet someProject
 someProject :: Project
 someProject = ProjectGroup "Sweden" [stockholm, göteborg, malmö]
   where
@@ -17,3 +18,4 @@ someProject = ProjectGroup "Sweden" [stockholm, göteborg, malmö]
     malmö = ProjectGroup "Malmö" [city, limhamn]
     city = SingleProject 3 "Malmö City"
     limhamn = SingleProject 4 "Limhamn"
+-- end snippet someProject

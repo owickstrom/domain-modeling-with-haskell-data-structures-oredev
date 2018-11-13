@@ -1,16 +1,28 @@
 ---
 title: Domain Modeling with Haskell Data Structures
 author: Oskar Wickström
-date: March 2018
+date: Øredev, November 2018
 theme: Boadilla
 classoption: dvipsnames
 ---
 
+- Haskell intro
+    - Expressive language and type system
+        - Aligns with thinking
+        - Design up front
+    - GHC compiler, robustness
+    - Ecosystem
+    - Abstractions, category theory
+
+
 ## Domain Modeling
 
-* Clear and unambigous naming
-* Reify the domain we are working with in our code
+* Capturing selected aspects of a problem domain
+  - Data
+  - Behavior
+* Clear and unambiguous naming
 * Separate bounded contexts
+* Reify the domain in our code
 
 ## Haskell
 
@@ -18,19 +30,23 @@ classoption: dvipsnames
     - Sum types
     - Product types
     - Type classes
-* Powerful type system and compiler
-* Mature language and ecosystem
+* Powerful type system
+* Mature compiler (GHC) and ecosystem
 
 ## Modeling in Haskell
 
-* To a large extent, our domain model should be reified with data types
+* Goal: domain model should be reified with data types
 * Separation with data types:
     - Separate bounded contexts using different data types
     - Define explicit interfaces and translations between them
 * Structure computation as data structures
+
+## Modeling in Haskell (cont.)
+
 * Use modules for cohesive units
     - Domain logic, repositories/data access, rendering
-    - Capture interfaces and responsibilities using type classes
+    - Capture interfaces and responsibilities using data types and
+      type classes
     - Avoid the `Types.hs` trap
 * Leverage all the good abstractions in Haskell
 
@@ -48,6 +64,11 @@ classoption: dvipsnames
 
 ## Project Management
 
+* A simple project management system
+    - Hierarchy of projects
+    - Budgets
+    - Transactions
+    - Reports
 * Not terribly exciting, but relatable
 * We'll explore:
     - Data types
@@ -77,25 +98,69 @@ classoption: dvipsnames
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=report}
 ```
 
-## Calculating a Report
+## Calculating a Report{transition=none}
 
-``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport}
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport emphasize=1-1}
 ```
 
-## Aggregating Reports
+## Calculating a Report{transition=none}
 
-``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport}
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport emphasize=2:39-6:3}
+```
+
+## Calculating a Report{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport emphasize=8-8}
+```
+
+## Calculating a Report{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport emphasize=9-9}
+```
+
+## Calculating a Report{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateReport emphasize=10-11}
+```
+
+## Recursively Calculating Reports
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=1-1}
+```
+
+## Recursively Calculating Reports{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=4-7}
+```
+
+## Recursively Calculating Reports{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=8-9}
 ```
 
 ## Printing Projects
 
-``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree}
+``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree emphasize=1-1}
+```
+
+## Printing Projects{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree emphasize=4-5}
+```
+
+## Printing Projects{transition=none}
+
+``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree emphasize=6-7}
+```
+
+## Defining a Project
+
+``` {.haskell include=src/listings/data-structures/src/Demo.hs snippet=someProject}
 ```
 
 ## Printing Projects in the REPL
 
-\verbatimfont{\small}
-```
+```{.plain}
 *Demo> putStrLn (prettyProject someProject)
 Sweden
 |
@@ -117,8 +182,7 @@ Sweden
 
 ## Printing Reports in the REPL
 
-\verbatimfont{\small}
-```
+```{.plain}
 *Demo> r <- calculateProjectReport someProject
 *Demo> putStrLn (prettyReport r)
 Budget: -14904.17, Net: 458.03, difference: +15362.20
@@ -131,6 +195,18 @@ Budget: -14904.17, Net: 458.03, difference: +15362.20
 * Monoid
 * Functor
 * Foldable
+
+## Monoid
+
+TODO
+
+## Functor
+
+TODO
+
+## Foldable
+
+TODO
 
 # New Requirements!
 

@@ -13,12 +13,14 @@ data Report = Report
   } deriving (Show, Eq)
 -- end snippet report
 
--- start snippet monoid
+-- start snippet semigroup-monoid
+instance Semigroup Report where
+  Report b1 n1 d1 <> Report b2 n2 d2 =
+    Report (b1 + b2) (n1 + n2) (d1 + d2)
+
 instance Monoid Report where
   mempty = Report 0 0 0
-  mappend (Report b1 n1 d1) (Report b2 n2 d2) =
-    Report (b1 + b2) (n1 + n2) (d1 + d2)
--- end snippet monoid
+-- end snippet semigroup-monoid
 
 -- start snippet calculateReport
 calculateReport :: Budget -> [Transaction] -> Report

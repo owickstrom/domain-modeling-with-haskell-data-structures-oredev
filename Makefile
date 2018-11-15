@@ -115,7 +115,7 @@ target/images/%: src/images/%
 	cp $< $@
 
 serve: html-slides
-	(find src | entr -s 'make html-slides && scripts/reload-browser Firefox') &
+	(find src | entr -s 'make html-slides') &
 	(cd target/html && python -m SimpleHTTPServer 10000)
 
 .PHONY: pages

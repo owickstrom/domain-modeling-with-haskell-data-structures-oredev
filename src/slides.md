@@ -181,6 +181,11 @@ Oskar Wickström ordering Quattro Formaggio.
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=8-9}
 ```
 
+## Semigroup and Monoid for Report
+
+``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=semigroup-monoid}
+```
+
 ## Printing Projects
 
 ``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree emphasize=1-1}

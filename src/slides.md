@@ -60,6 +60,49 @@ classoption: dvipsnames
 * Great for changing business requirements
 * Focus testing on behaviour
 
+# Haskell Refresher
+
+## Product Types
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=product-type-1}
+```
+
+## Sum Types
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=sum-type-1}
+```
+
+## Functions
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=function-1}
+```
+
+## Pattern Matching
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=pattern-matching}
+```
+
+## Nested Data
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=nested-data}
+```
+
+## Effects
+
+```{.haskell include=src/listings/intro/src/Intro.hs snippet=effects}
+```
+
+## All Together, Now!
+
+```{.shell}
+> let me = Customer "Oskar" "Wickström"
+> let order = airlineStyleOrder me OvoLacto
+> printOrder order
+Oskar Wickström ordering Quattro Formaggio.
+```
+
+
+
 # Example: Project Management System
 
 ## Project Management
@@ -160,8 +203,8 @@ classoption: dvipsnames
 
 ## Printing Projects in the REPL
 
-```{.plain}
-*Demo> putStrLn (prettyProject someProject)
+```{.shell}
+> putStrLn (prettyProject someProject)
 Sweden
 |
 +- Stockholm (1)
@@ -182,9 +225,9 @@ Sweden
 
 ## Printing Reports in the REPL
 
-```{.plain}
-*Demo> r <- calculateProjectReport someProject
-*Demo> putStrLn (prettyReport r)
+```{.shell}
+> r <- calculateProjectReport someProject
+> putStrLn (prettyReport r)
 Budget: -14904.17, Net: 458.03, difference: +15362.20
 ```
 
@@ -237,10 +280,9 @@ TODO
 
 ## Pretty Printing the Reports
 
-\verbatimfont{\footnotesize}
-```
-*Demo> pr <- calculateProjectReports someProject
-*Demo> putStrLn (prettyProject prettyReport pr)
+```shell
+> pr <- calculateProjectReports someProject
+> putStrLn (prettyProject prettyReport pr)
 Sweden
 |
 +- Stockholm: Budget: -2259.99, Net: 391.23, difference: +2651.22
@@ -256,9 +298,8 @@ Sweden
 
 ## Pretty Printing the Reports (cont.)
 
-\verbatimfont{\footnotesize}
-```
-*Demo> putStrLn (prettyReport (accumulateProjectReport pr))
+```shell
+> putStrLn (prettyReport (accumulateProjectReport pr))
 Budget: -6566.67, Net: 4916.23, difference: +11482.90
 ```
 
@@ -281,7 +322,7 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 ``` {.haskell include=src/listings/writert/src/Project.hs snippet=project}
 ```
 
-## Calculating Project Reports with Traversable
+## Calculating Project Reports with WriterT
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports}
 ```
@@ -290,12 +331,12 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
     -- ...
 ```
 
-## Calculating Project Reports with Traversable (cont.)
+## Calculating Project Reports with WriterT (cont.)
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single}
 ```
 
-## Calculating Project Reports with Traversable (cont.)
+## Calculating Project Reports with WriterT (cont.)
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-group}
 ```
@@ -310,10 +351,9 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 
 ## Pretty Printing the Reports
 
-\verbatimfont{\footnotesize}
-```
-*Demo> pr <- calculateProjectReports someProject
-*Demo> putStrLn (prettyProject prettyReport prettyReport pr)
+```shell
+> pr <- calculateProjectReports someProject
+> putStrLn (prettyProject prettyReport prettyReport pr)
 Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 |
 +- Stockholm: Budget: -3313.83, Net: -805.37, difference: +2508.46
@@ -381,8 +421,8 @@ Fix :: f (Mu f) -> Mu f
 
 \verbatimfont{\scriptsize}
 ```
-*Demo> pr <- calculateProjectReports someProject
-*Demo> drawTreeWith prettyResult pr
+> pr <- calculateProjectReports someProject
+> drawTreeWith prettyResult pr
  \-- Sweden: Budget: +2191.60, Net: +1238.19, difference: -953.41
       |-- Stockholm (1): Budget: +5092.27, Net: -1472.80, difference: -656 ...
       |-- Gothenburg (2): Budget: -4325.22, Net: +2252.52, difference: +65 ...

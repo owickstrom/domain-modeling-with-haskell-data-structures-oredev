@@ -349,3 +349,20 @@ p.author, p.date {
 @media print {
   .backgrounds {
     background-color: #fff; } }
+
+
+/*********************************************
+ * HIGHLIGHT.JS OVERRIDES
+ *********************************************/
+
+.shell .bash {
+  color: inherit !important;
+  font-weight: 600;
+}
+.shell .hljs-meta {
+  color: inherit !important;
+  font-weight: 600;
+}
+.shell .bash * {
+  color: inherit !important;
+}

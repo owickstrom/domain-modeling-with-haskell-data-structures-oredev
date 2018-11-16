@@ -6,15 +6,6 @@ theme: Boadilla
 classoption: dvipsnames
 ---
 
-- Haskell intro
-    - Expressive language and type system
-        - Aligns with thinking
-        - Design up front
-    - GHC compiler, robustness
-    - Ecosystem
-    - Abstractions, category theory
-
-
 ## Domain Modeling
 
 * Capturing selected aspects of a problem domain
@@ -31,6 +22,8 @@ classoption: dvipsnames
     - Product types
     - Type classes
 * Powerful type system
+    - Guides your implementation
+    - Maintainable code
 * Mature compiler (GHC) and ecosystem
 
 ## Modeling in Haskell
@@ -48,7 +41,7 @@ classoption: dvipsnames
     - Capture interfaces and responsibilities using data types and
       type classes
     - Avoid the `Types.hs` trap
-* Leverage all the good abstractions in Haskell
+* Leverage all the lovely abstractions
 
 ## Type-Driven Development
 
@@ -58,7 +51,7 @@ classoption: dvipsnames
     - Fix all the type errors
     - Test, and possibly refine your model
 * Great for changing business requirements
-* Focus testing on behaviour
+* Focus testing on behavior
 
 # Haskell Refresher
 
@@ -98,7 +91,7 @@ classoption: dvipsnames
 > let me = Customer "Oskar" "Wickström"
 > let order = airlineStyleOrder me OvoLacto
 > printOrder order
-Oskar Wickström ordering Quattro Formaggio.
+Oskar Wickström ordering Omelette.
 ```
 
 
@@ -117,14 +110,18 @@ Oskar Wickström ordering Quattro Formaggio.
     - Data types
     - Some very useful abstractions
 
-## Projects
+## Project Tree
 
-![](./uml/project.png){width=50%}
+![](./images/project-tree.svg){width=100%}
 
-## Project
+## Project Data Type
 
 ``` {.haskell include=src/listings/data-structures/src/Project.hs snippet=project}
 ```
+
+## Project in UML
+
+![](./uml/project.png){width=50%}
 
 ## Budget
 
@@ -186,6 +183,10 @@ Oskar Wickström ordering Quattro Formaggio.
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=semigroup-monoid}
 ```
 
+## Recursive foldMap
+
+![](./images/project-tree-foldmap.svg){width=100%}
+
 ## Printing Projects
 
 ``` {.haskell include=src/listings/data-structures/src/PrettyPrint.hs snippet=tree emphasize=1-1}
@@ -214,7 +215,7 @@ Sweden
 |
 +- Stockholm (1)
 |
-+- Gothenburg (2)
++- Göteborg (2)
 |
 `- Malmö
    |
@@ -292,7 +293,7 @@ Sweden
 |
 +- Stockholm: Budget: -2259.99, Net: 391.23, difference: +2651.22
 |
-+- Gothenburg: Budget: -3204.79, Net: -228.31, difference: +2976.48
++- Göteborg: Budget: -3204.79, Net: -228.31, difference: +2976.48
 |
 `- Malmö
    |
@@ -327,7 +328,7 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 ``` {.haskell include=src/listings/writert/src/Project.hs snippet=project}
 ```
 
-## Calculating Project Reports with WriterT
+## Calculating Reports with WriterT
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports}
 ```
@@ -336,12 +337,12 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
     -- ...
 ```
 
-## Calculating Project Reports with WriterT (cont.)
+## For A Single Project
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single}
 ```
 
-## Calculating Project Reports with WriterT (cont.)
+## For a Project Group
 
 ``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-group}
 ```
@@ -363,7 +364,7 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 |
 +- Stockholm: Budget: -3313.83, Net: -805.37, difference: +2508.46
 |
-+- Gothenburg: Budget: -422.48, Net: +1479.00, difference: +1901.48
++- Göteborg: Budget: -422.48, Net: +1479.00, difference: +1901.48
 |
 `- Malmö: Budget: -5541.79, Net: +3978.18, difference: +9519.97
    |
@@ -377,75 +378,29 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 * Explicit recursion might still be necessary
 * The Writer monad transformer
 * There are many ways to leverage Monoid
-* Computation as a data structure
-
-# Is there more?
 
 ## Explicit Recursion
 
 * Explicit recursion can, with large data types, be error-prone
 * Current `Project` type has a hidden coupling to the reporting module
     - The `g` and `a` parameters are only there for reporting
-* Can we decouple `Project` from that concern?
+* Recursion schemes is an *advanced* option
 
-## Factoring Out Recursion
+## What's Missing?
 
-``` {.haskell include=src/listings/fixplate/src/Project.hs snippet=Project}
-```
-
-## Fix
-
-\verbatimfont{\small}
-```
-*Project> import Data.Generics.Fixplate.Base
-*Project Data.Generics.Fixplate.Base> :t Fix
-Fix :: f (Mu f) -> Mu f
-```
-
-## Project Constructors
-
-``` {.haskell include=src/listings/fixplate/src/Project.hs snippet=constructors}
-```
-
-## Decorating with Attr
-
-``` {.haskell include=src/listings/fixplate/src/Reporting.hs snippet=ProjectReport}
-```
-
-## Bottom-Up Reporting with Fixplate
-
-``` {.haskell include=src/listings/fixplate/src/Reporting.hs snippet=calculateProjectReports}
-```
-
-## Pretty Printing Without Explicit Recursion
-
-``` {.haskell include=src/listings/fixplate/src/PrettyPrint.hs snippet=prettyResult}
-```
-
-## Fixplate Draws Our Trees
-
-\verbatimfont{\scriptsize}
-```
-> pr <- calculateProjectReports someProject
-> drawTreeWith prettyResult pr
- \-- Sweden: Budget: +2191.60, Net: +1238.19, difference: -953.41
-      |-- Stockholm (1): Budget: +5092.27, Net: -1472.80, difference: -656 ...
-      |-- Gothenburg (2): Budget: -4325.22, Net: +2252.52, difference: +65 ...
-      \-- Malmö: Budget: +1424.55, Net: +458.47, difference: -966.08
-           |-- Malmö City (3): Budget: -6456.93, Net: +2400.33, difference ...
-           \-- Limhamn (4): Budget: +7881.48, Net: -1941.86, difference: - ...
-```
+TODO!
 
 ## Summary
 
 * Use Haskell data types
+    - As your starting point
+    - To structure computation
 * Leverage great abstractions
     - Functor
     - Monoid
     - Foldable
     - Traversable
     - and many more
-* Maybe check out recursion schemes
 * Enjoy evolving and refactoring existing code
 
 # Thank You!

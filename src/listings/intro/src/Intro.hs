@@ -28,15 +28,15 @@ fullName customer =
 
 -- start snippet pattern-matching
 data Meal
-  = BurgerAndFries
-  | QuattroFormaggio
+  = ChickenSandwich
+  | Omelette
   | ChickpeaCurry
 
 formatMeal :: Meal -> Text
 formatMeal meal = case meal of
-  BurgerAndFries   -> "Burger and Fries"
-  QuattroFormaggio -> "Quattro Formaggio"
-  ChickpeaCurry    -> "Chickpea Curry"
+  ChickenSandwich -> "Chicken Sandwich"
+  Omelette        -> "Omelette"
+  ChickpeaCurry   -> "Chickpea Curry"
 -- end snippet pattern-matching
 
 -- start snippet nested-data
@@ -47,8 +47,8 @@ data Order = Order { orderCustomer :: Customer
 airlineStyleOrder :: Customer -> MealPreference -> Order
 airlineStyleOrder customer pref =
   case pref of
-    Omnivore   -> Order customer BurgerAndFries
-    OvoLacto   -> Order customer QuattroFormaggio
+    Omnivore   -> Order customer ChickenSandwich
+    OvoLacto   -> Order customer Omelette
     Vegetarian -> Order customer ChickpeaCurry
 -- end snippet nested-data
 

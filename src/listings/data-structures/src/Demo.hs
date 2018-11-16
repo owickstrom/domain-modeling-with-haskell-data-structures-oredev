@@ -14,7 +14,7 @@ someProject :: Project
 someProject = ProjectGroup "Sweden" [stockholm, göteborg, malmö]
   where
     stockholm = SingleProject 1 "Stockholm"
-    göteborg = SingleProject 2 "Gothenburg"
+    göteborg = SingleProject 2 "Göteborg"
     malmö = ProjectGroup "Malmö" [city, limhamn]
     city = SingleProject 3 "Malmö City"
     limhamn = SingleProject 4 "Limhamn"

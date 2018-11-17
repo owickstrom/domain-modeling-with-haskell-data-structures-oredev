@@ -3,7 +3,7 @@ PLANTUML=deps/plantuml.jar
 
 MASTER=src/master.tex
 TEX_OPTIONS=options.tex
-SRCS=$(shell find src -name '*.tex' -o -name '*.md' -o -name '*.css' -o -name '*.png' -o -name '*.uml' -o -name '*.dot' -o -name '*.hs') \
+SRCS=$(shell find src -name '*.tex' -o -name '*.md' -o -name '*.css' -o -name '*.svg' -o -name '*.png' -o -name '*.uml' -o -name '*.dot' -o -name '*.hs') \
 		 $(shell find src/examples -name '*.hs')
 
 PANDOC_FLAGS= -s \

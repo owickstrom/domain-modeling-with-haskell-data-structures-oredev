@@ -178,10 +178,37 @@ Oskar Wickström ordering Omelette.
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=8-9}
 ```
 
+## Requirements for foldMap
+
+* Semigroup (associative operation)
+
+    ```haskell
+    class Semigroup a where
+      (<>) :: a -> a -> a
+    ```
+
+* Monoid (Semigroup with identity element)
+
+    ```haskell
+    class Semigroup a => Monoid a where
+      mempty  :: a
+    ```
+
 ## Semigroup and Monoid for Report
 
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=semigroup-monoid}
 ```
+
+## FoldMap
+
+```shell
+> :type foldMap
+foldMap :: (Foldable t, Monoid m) => (a -> m) -> t a -> m
+```
+
+## foldMap
+
+![](./images/foldMap.svg){width=60%}
 
 ## Recursive foldMap
 
@@ -245,18 +272,6 @@ Budget: -14904.17, Net: 458.03, difference: +15362.20
 * Functor
 * Foldable
 
-## Monoid
-
-TODO
-
-## Functor
-
-TODO
-
-## Foldable
-
-TODO
-
 # New Requirements!
 
 ## A Tree Of Reports
@@ -273,6 +288,14 @@ TODO
 
 ``` {.haskell include=src/listings/foldable-traversable/src/Reporting.hs snippet=calculateProjectReports}
 ```
+
+## Traversable
+
+TODO
+
+## Traversable
+
+TODO: Graphics
 
 ## Accumulating Reports with Foldable
 
@@ -386,14 +409,14 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
     - The `g` and `a` parameters are only there for reporting
 * Recursion schemes is an *advanced* option
 
-## What's Missing?
+## What we haven't covered
 
 TODO!
 
 ## Summary
 
 * Use Haskell data types
-    - As your starting point
+    - As the basis of your domain model
     - To structure computation
 * Leverage great abstractions
     - Functor

@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Intro where
-
 import           Data.Text
 import           Data.Text.IO as Text
 

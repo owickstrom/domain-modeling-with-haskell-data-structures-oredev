@@ -28,30 +28,12 @@ classoption: dvipsnames
 
 ## Modeling in Haskell
 
-* Goal: domain model should be reified with data types
-* Separation with data types:
-    - Separate bounded contexts using different data types
-    - Define explicit interfaces and translations between them
+* Express the domain model using data types
 * Structure computation as data structures
-
-## Modeling in Haskell (cont.)
-
-* Use modules for cohesive units
-    - Domain logic, repositories/data access, rendering
-    - Capture interfaces and responsibilities using data types and
-      type classes
-    - Avoid the `Types.hs` trap
-* Leverage all the lovely abstractions
-
-## Type-Driven Development
-
-* "Type, define, refine"
-* When modifying existing code:
+* "Type-Driven Development"
     - Change to data types to model the new behavior
     - Fix all the type errors
     - Test, and possibly refine your model
-* Great for changing business requirements
-* Focus testing on behavior
 
 # Haskell Refresher
 
@@ -94,7 +76,29 @@ classoption: dvipsnames
 Oskar Wickström ordering Omelette.
 ```
 
+## Functor
 
+```{.haskell include=src/listings/intro/src/Functor.hs snippet=functor}
+```
+
+## Functor for Maybe
+
+* A `Functor` instance for `Maybe`:
+
+  ```{.haskell include=src/listings/intro/src/Functor.hs snippet=maybe}
+  ```
+
+* We can then `fmap` functions over `Maybe` values:
+
+  ```haskell
+  fmap (+1) (Just 10)  -- Just 11
+  fmap (+1) Nothing    -- Nothing
+  ```
+
+## Functor for IO
+
+```{.haskell include=src/listings/intro/src/IOFunctor.hs snippet=io-functor}
+```
 
 # Example: Project Management System
 
@@ -118,10 +122,6 @@ Oskar Wickström ordering Omelette.
 
 ``` {.haskell include=src/listings/data-structures/src/Project.hs snippet=project}
 ```
-
-## Project in UML
-
-![](./uml/project.png){width=50%}
 
 ## Budget
 
@@ -180,7 +180,7 @@ Oskar Wickström ordering Omelette.
 
 ## Requirements for foldMap
 
-* Semigroup (associative operation)
+* Semigroup (associative binary operation)
 
     ```haskell
     class Semigroup a where
@@ -201,9 +201,8 @@ Oskar Wickström ordering Omelette.
 
 ## FoldMap
 
-```shell
-> :type foldMap
-foldMap :: (Foldable t, Monoid m) => (a -> m) -> t a -> m
+```haskell
+foldMap :: (Foldable f, Monoid b) => (a -> b) -> f a -> b
 ```
 
 ## foldMap

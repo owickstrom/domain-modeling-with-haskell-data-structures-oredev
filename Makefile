@@ -76,7 +76,7 @@ $(SLIDES_NO_NOTES): target/slides-no-notes.tex $(IMAGES)
 		-halt-on-error \
 		slides.tex
 
-target/html/index.html: $(SRCS) src/header.html src/theme.css $(IMAGES)
+target/html/index.html: $(SRCS) src/header.html src/theme.css $(IMAGES) $(DIAGRAMS) $(UMLS)
 	mkdir -p target/html
 	cp -r lib/* target/html/
 	cp -r src/images target/html/
@@ -97,12 +97,12 @@ target/html/index.html: $(SRCS) src/header.html src/theme.css $(IMAGES)
 target/diagrams/%.png: src/diagrams/%.dot
 	mkdir -p target/diagrams
 	dot -Tpng $< -o $@
-	convert $@ -trim $@
+	gm convert $@ -trim $@
 
 target/uml/%.png: src/uml/%.uml.txt src/uml/styles.iuml $(PLANTUML)
 	mkdir -p $(shell dirname $@)
 	cat $< | java -jar $(PLANTUML) -tpng -pipe > $@
-	convert $@ -trim $@
+	gm convert $@ -trim $@
 
 .PHONY: diagrams
 diagrams: $(DIAGRAMS) $(UMLS)

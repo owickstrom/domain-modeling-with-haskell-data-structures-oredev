@@ -223,8 +223,32 @@ Oskar Wickström ordering Omelette.
 
 ## foldMap{.side-track}
 
-```haskell
-foldMap :: (Foldable f, Monoid b) => (a -> b) -> f a -> b
+```{.haskell emphasize=3:6-3:99}
+foldMap
+  :: (Foldable f, Monoid b)
+  => (a -> b)
+  -> f a
+  -> b
+```
+
+## foldMap{.side-track transition=none}
+
+```{.haskell emphasize=4:6-4:99}
+foldMap
+  :: (Foldable f, Monoid b)
+  => (a -> b)
+  -> f a
+  -> b
+```
+
+## foldMap{.side-track transition=none}
+
+```{.haskell emphasize=5:6-5:99}
+foldMap
+  :: (Foldable f, Monoid b)
+  => (a -> b)
+  -> f a
+  -> b
 ```
 
 ## foldMap on Lists{.side-track}
@@ -352,9 +376,14 @@ example = traverse getDescription myProject
 ```
 
 
-## Calculating Project Reports with Traversable
+## Calculating Reports with Traversable
 
-``` {.haskell include=src/listings/foldable-traversable/src/Reporting.hs snippet=calculateProjectReports}
+``` {.haskell include=src/listings/foldable-traversable/src/Reporting.hs snippet=calculateProjectReports emphasize=2:6-3:99}
+```
+
+## Calculating Reports with Traversable{transition=none}
+
+``` {.haskell include=src/listings/foldable-traversable/src/Reporting.hs snippet=calculateProjectReports emphasize=5-8}
 ```
 
 ## Accumulating Reports with Foldable
@@ -413,7 +442,16 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 
 ## Calculating Reports with WriterT
 
-``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports}
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports emphasize=2:6-3:31}
+```
+
+``` {.haskell}
+    -- ...
+```
+
+## Calculating Reports with WriterT{transition=none}
+
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports emphasize=5:11-5:35}
 ```
 
 ``` {.haskell}
@@ -422,12 +460,22 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 
 ## For A Single Project
 
-``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single}
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single emphasize=2-5}
+```
+
+## For A Single Project{transition=none}
+
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single emphasize=6-6}
+```
+
+## For A Single Project{transition=none}
+
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-single emphasize=7-7}
 ```
 
 ## For a Project Group
 
-``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-group}
+``` {.haskell include=src/listings/writert/src/Reporting.hs snippet=calculateProjectReports-group emphasize=2:7-2:99}
 ```
 
 ## Adapting the Pretty Printing

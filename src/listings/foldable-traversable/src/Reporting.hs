@@ -31,7 +31,9 @@ calculateReport budget transactions =
     asProfit (Purchase m) = pure (negate m)
 
 -- start snippet calculateProjectReports
-calculateProjectReports :: Project ProjectId -> IO (Project Report)
+calculateProjectReports
+  :: Project ProjectId
+  -> IO (Project Report)
 calculateProjectReports =
   traverse $ \p ->
     calculateReport

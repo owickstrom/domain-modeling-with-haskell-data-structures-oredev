@@ -6,6 +6,18 @@ theme: Boadilla
 classoption: dvipsnames
 ---
 
+## Introduction
+
+![Symbiont logo](images/symbiont.png){width=30% .float-right}
+
+* I work at Symbiont
+  - Remote
+  - Haskell
+* Long-standing interest in DDD
+* Applying Haskell since early days
+
+# Domain Modeling & Haskell
+
 ## Domain Modeling
 
 * Capturing selected aspects of a problem domain
@@ -34,6 +46,16 @@ classoption: dvipsnames
     - Change to data types to model the new behavior
     - Fix all the type errors
     - Test, and possibly refine your model
+
+## Agenda
+
+* Basics of Haskell language
+* Larger example
+  - Data types
+  - Functions
+  - Effects
+  - Common abstractions
+* Scratching the surface!
 
 # Haskell Refresher
 
@@ -178,7 +200,7 @@ Oskar Wickström ordering Omelette.
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=calculateProjectReport emphasize=8-9}
 ```
 
-## Requirements for foldMap
+## Requirements for foldMap{.side-track}
 
 * Semigroup (associative binary operation)
 
@@ -199,13 +221,13 @@ Oskar Wickström ordering Omelette.
 ``` {.haskell include=src/listings/data-structures/src/Reporting.hs snippet=semigroup-monoid}
 ```
 
-## FoldMap
+## foldMap{.side-track}
 
 ```haskell
 foldMap :: (Foldable f, Monoid b) => (a -> b) -> f a -> b
 ```
 
-## foldMap
+## foldMap on Lists{.side-track}
 
 ![](./images/foldMap.svg){width=60%}
 
@@ -280,21 +302,60 @@ Budget: -14904.17, Net: 458.03, difference: +15362.20
 
 ## Parameterizing Project
 
-``` {.haskell include=src/listings/foldable-traversable/src/Project.hs snippet=project}
+``` {.haskell include=src/listings/foldable-traversable/src/Project.hs snippet=project emphasize=1:14-1:14,3:19-3:19,5:27-5:27}
 ```
+
+## Parameterizing Project{transition=none}
+
+``` {.haskell include=src/listings/foldable-traversable/src/Project.hs snippet=project emphasize=6:32-6:52}
+```
+
+## Traversable{.side-track transition=none}
+
+```{.haskell emphasize=3:6-3:15}
+traverse
+  :: (Traversable t, Applicative f)
+  => (a -> f b)
+  -> t a
+  -> f (t b)
+```
+
+## Traversable{.side-track transition=none}
+
+```{.haskell emphasize=4:6-4:9}
+traverse
+  :: (Traversable t, Applicative f)
+  => (a -> f b)
+  -> t a
+  -> f (t b)
+```
+
+## Traversable{.side-track transition=none}
+
+```{.haskell emphasize=5:6-5:12}
+traverse
+  :: (Traversable t, Applicative f)
+  => (a -> f b)
+  -> t a
+  -> f (t b)
+```
+
+## Example of Traversable{.side-track}
+
+```haskell
+getDescription :: ProjectId -> IO Text
+
+myProject :: Project ProjectId
+
+example :: IO (Project Text)
+example = traverse getDescription myProject
+```
+
 
 ## Calculating Project Reports with Traversable
 
 ``` {.haskell include=src/listings/foldable-traversable/src/Reporting.hs snippet=calculateProjectReports}
 ```
-
-## Traversable
-
-TODO
-
-## Traversable
-
-TODO: Graphics
 
 ## Accumulating Reports with Foldable
 
@@ -347,7 +408,7 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 
 ## Parameterizing Project Even More
 
-``` {.haskell include=src/listings/writert/src/Project.hs snippet=project}
+``` {.haskell include=src/listings/writert/src/Project.hs snippet=project emphasize=1:14-1:14,5:18-5:18,6:27-6:27}
 ```
 
 ## Calculating Reports with WriterT
@@ -398,31 +459,45 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 ## Even More Learnings
 
 * Explicit recursion might still be necessary
-* The Writer monad transformer
-* There are many ways to leverage Monoid
+* The `WriterT` monad transformer
+* There are many ways to leverage `Monoid`
 
-## Explicit Recursion
+## Remaining Issues
 
 * Explicit recursion can, with large data types, be error-prone
 * Current `Project` type has a hidden coupling to the reporting module
     - The `g` and `a` parameters are only there for reporting
-* Recursion schemes is an *advanced* option
+* Recursion schemes is an *advanced* solution
+
+# Summary
 
 ## What we haven't covered
 
-TODO!
+* Writes
+* Cyclic references
+* Complex database queries
+* Pretty front-end
 
-## Summary
+## Domain Modeling in Haskell
 
 * Use Haskell data types
     - As the basis of your domain model
     - To structure computation
 * Leverage great abstractions
     - Functor
+    - Semigroup
     - Monoid
     - Foldable
     - Traversable
-    - and many more
 * Enjoy evolving and refactoring existing code
+
+## Next Steps
+
+* [Haskell at Work](https://haskell-at-work.com/) screencasts:
+  - [Data Structures](https://haskell-at-work.com/episodes/2018-01-19-domain-modelling-with-haskell-data-structures.html)
+  - [Generalizing with Foldable and Traversable](https://haskell-at-work.com/episodes/2018-01-22-domain-modelling-with-haskell-generalizing-with-foldable-and-traversable.html)
+  - [Accumulating with WriterT](https://haskell-at-work.com/episodes/2018-02-02-domain-modelling-with-haskell-accumulating-with-writert.html)
+  - [Factoring Out Recursion](https://haskell-at-work.com/episodes/2018-02-11-domain-modelling-with-haskell-factoring-out-recursion.html)
+* [Type Classes (online Haskell courses)](https://typeclasses.com/)
 
 # Thank You!

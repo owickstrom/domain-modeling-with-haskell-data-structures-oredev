@@ -193,7 +193,7 @@ body {
   word-wrap: normal; }
 
 .reveal pre code mark {
-  background-color: #fff7a9;
+  background-color: #fff399;
 }
 .reveal pre code mark.block {
   display: inline-block;
@@ -324,6 +324,17 @@ p.author, p.date {
 .reveal .slide-background.contain .slide-background-content {
   background-size: contain;
 }
+.reveal .slide-background.side-track {
+  background-color: #ddd;
+}
+.reveal section img {
+  background-color: transparent;
+}
+
+.reveal section img.float-right {
+  float: right;
+  margin: 0 0 1em 1em;
+}
 
 /*********************************************
  * NAVIGATION CONTROLS
@@ -355,6 +366,9 @@ p.author, p.date {
  * HIGHLIGHT.JS OVERRIDES
  *********************************************/
 
+.hljs {
+  background-color: transparent !important;
+}
 .shell .bash {
   color: inherit !important;
   font-weight: 600;

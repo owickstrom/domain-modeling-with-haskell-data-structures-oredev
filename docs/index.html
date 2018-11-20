@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Oskar Wickström">
+  <title>Domain Modeling with Haskell Data Structures</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/owickstrom.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="highlight.js/styles/xcode.css">
+  <script src="highlight.js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Domain Modeling with Haskell Data Structures</h1>
+  <p class="author">Oskar Wickström</p>
+  <p class="date">Øredev, November 2018</p>
+</section>
+
+<section id="introduction" class="slide level2">
+<h2>Introduction</h2>
+<p><img data-src="images/symbiont.png" alt="Symbiont logo" class="float-right" style="width:30.0%" /></p>
+<ul>
+<li>I work at Symbiont
+<ul>
+<li>Remote</li>
+<li>Haskell</li>
+</ul></li>
+<li>Long-standing interest in DDD</li>
+<li>Applying Haskell since early days</li>
+</ul>
+</section>
+<section><section id="domain-modeling-haskell" class="title-slide slide level1"><h1>Domain Modeling &amp; Haskell</h1></section><section id="domain-modeling" class="slide level2">
+<h2>Domain Modeling</h2>
+<ul>
+<li>Capturing selected aspects of a problem domain
+<ul>
+<li>Data</li>
+<li>Behavior</li>
+</ul></li>
+<li>Clear and unambiguous naming</li>
+<li>Separate bounded contexts</li>
+<li>Reify the domain in our code</li>
+</ul>
+</section><section id="haskell" class="slide level2">
+<h2>Haskell</h2>
+<p><img data-src="images/haskell-logo.svg" alt="Haskell logo" class="float-right" style="width:40.0%" /></p>
+<ul>
+<li>All the flexibility we need
+<ul>
+<li>Sum types</li>
+<li>Product types</li>
+<li>Type classes</li>
+</ul></li>
+<li>Powerful type system
+<ul>
+<li>Guides your implementation</li>
+<li>Maintainable code</li>
+</ul></li>
+<li>Mature compiler (GHC) and ecosystem</li>
+</ul>
+</section><section id="modeling-in-haskell" class="slide level2">
+<h2>Modeling in Haskell</h2>
+<ul>
+<li>Express the domain model using data types</li>
+<li>Structure computation as data structures</li>
+<li>“Type-Driven Development”
+<ul>
+<li>Change to data types to model the new behavior</li>
+<li>Fix all the type errors</li>
+<li>Test, and possibly refine your model</li>
+</ul></li>
+</ul>
+</section><section id="agenda" class="slide level2">
+<h2>Agenda</h2>
+<ul>
+<li>Basics of Haskell language</li>
+<li>Larger example
+<ul>
+<li>Data types</li>
+<li>Functions</li>
+<li>Effects</li>
+<li>Common abstractions</li>
+</ul></li>
+<li>Scratching the surface!</li>
+</ul>
+</section></section>
+<section><section id="haskell-refresher" class="title-slide slide level1"><h1>Haskell Refresher</h1></section><section id="product-types" class="slide level2">
+<h2>Product Types</h2>
+<pre class="haskell"><code>data AccountBalance = AccountBalance Money Date</code></pre>
+</section><section id="product-types-with-record-syntax" class="slide level2">
+<h2>Product Types with Record Syntax</h2>
+<pre class="haskell"><code>data Customer =
+  Customer
+  { firstName :: Text
+  , lastName  :: Text
+  }
+</code></pre>
+</section><section id="sum-types" class="slide level2">
+<h2>Sum Types</h2>
+<pre class="haskell"><code>data MealPreference
+  = Omnivore
+  | OvoLacto
+  | Vegetarian
+</code></pre>
+</section><section id="functions" class="slide level2">
+<h2>Functions</h2>
+<pre class="haskell"><code>fullName :: Customer -&gt; Text
+fullName customer =
+  firstName customer &lt;&gt; &quot; &quot; &lt;&gt; lastName customer
+</code></pre>
+</section><section id="pattern-matching" class="slide level2">
+<h2>Pattern Matching</h2>
+<pre class="haskell"><code>data Meal
+  = ChickenSandwich
+  | Omelette
+  | ChickpeaCurry
+
+formatMeal :: Meal -&gt; Text
+formatMeal meal = case meal of
+  ChickenSandwich -&gt; &quot;Chicken Sandwich&quot;
+  Omelette        -&gt; &quot;Omelette&quot;
+  ChickpeaCurry   -&gt; &quot;Chickpea Curry&quot;
+</code></pre>
+</section><section id="nested-data" class="slide level2">
+<h2>Nested Data</h2>
+<pre class="haskell"><code>data Order = Order { orderCustomer :: Customer
+                   , orderMeal     :: Meal
+                   }
+
+airlineStyleOrder :: Customer -&gt; MealPreference -&gt; Order
+airlineStyleOrder customer pref =
+  case pref of
+    Omnivore   -&gt; Order customer ChickenSandwich
+    OvoLacto   -&gt; Order customer Omelette
+    Vegetarian -&gt; Order customer ChickpeaCurry
+</code></pre>
+</section><section id="effects" class="slide level2">
+<h2>Effects</h2>
+<pre class="haskell"><code>printOrder :: Order -&gt; IO ()
+printOrder order =
+  let msg =
+        fullName (orderCustomer order)
+          &lt;&gt; &quot; ordering &quot;
+          &lt;&gt; formatMeal (orderMeal order)
+          &lt;&gt; &quot;.&quot;
+  in Text.putStrLn msg
+</code></pre>
+</section><section id="all-together-now" class="slide level2">
+<h2>All Together, Now!</h2>
+<pre class="shell"><code>&gt; let me = Customer &quot;Oskar&quot; &quot;Wickström&quot;
+&gt; let order = airlineStyleOrder me OvoLacto
+&gt; printOrder order
+Oskar Wickström ordering Omelette.</code></pre>
+</section><section id="functor" class="slide level2">
+<h2>Functor</h2>
+<pre class="haskell"><code>class Functor f where
+  fmap :: (a -&gt; b) -&gt; f a -&gt; f b
+</code></pre>
+</section><section id="functor-for-maybe" class="slide level2">
+<h2>Functor for Maybe</h2>
+<ul>
+<li><p>A <code>Functor</code> instance for <code>Maybe</code>:</p>
+<pre class="haskell"><code>data Maybe a = Just a | Nothing
+
+instance Functor Maybe where
+  fmap f (Just a) = Just (f a)
+  fmap _ Nothing  = Nothing
+</code></pre></li>
+<li><p>We can then <code>fmap</code> functions over <code>Maybe</code> values:</p>
+<pre class="haskell"><code>fmap (+1) (Just 10)  -- Just 11
+fmap (+1) Nothing    -- Nothing</code></pre></li>
+</ul>
+</section><section id="functor-for-io" class="slide level2">
+<h2>Functor for IO</h2>
+<pre class="haskell"><code>randomDouble :: IO Double -- between 0.0 and 1.0
+
+randomLotteryPrize :: IO Integer
+randomLotteryPrize =
+  fmap toAmount randomDouble
+  where
+    toAmount d = round (d * 1000000)
+</code></pre>
+</section></section>
+<section id="example-project-management-system" class="title-slide slide level1"><h1>Example: Project Management System</h1></section>
+<section><section id="section" class="title-slide slide level1" data-background="images/overbusiness.gif"><h1></h1></section><section id="project-management" class="slide level2">
+<h2>Project Management</h2>
+<ul>
+<li>A simple project management system
+<ul>
+<li>Hierarchy of projects</li>
+<li>Budgets</li>
+<li>Transactions</li>
+<li>Reports</li>
+</ul></li>
+<li>Not terribly exciting, but relatable</li>
+<li>We’ll explore:
+<ul>
+<li>Data types</li>
+<li>Some very useful abstractions</li>
+</ul></li>
+</ul>
+</section><section id="project-tree" class="slide level2">
+<h2>Project Tree</h2>
+<p><img data-src="./images/project-tree.svg" style="width:100.0%" /></p>
+</section><section id="project-data-type" class="slide level2">
+<h2>Project Data Type</h2>
+<pre class="haskell"><code>data Project
+  = SingleProject ProjectId
+                  Text
+  | ProjectGroup Text
+                 [Project]
+  deriving (Show, Eq)
+</code></pre>
+</section><section id="budget" class="slide level2">
+<h2>Budget</h2>
+<pre class="haskell"><code>data Budget = Budget
+  { budgetIncome      :: Money
+  , budgetExpenditure :: Money
+  } deriving (Show, Eq)
+</code></pre>
+</section><section id="transaction" class="slide level2">
+<h2>Transaction</h2>
+<pre class="haskell"><code>data Transaction
+  = Sale Money
+  | Purchase Money
+  deriving (Eq, Show)
+</code></pre>
+</section><section id="reporting" class="slide level2">
+<h2>Reporting</h2>
+<pre class="haskell"><code>data Report = Report
+  { budgetProfit :: Money
+  , netProfit    :: Money
+  , difference   :: Money
+  } deriving (Show, Eq)
+</code></pre>
+</section><section id="calculating-a-report" class="slide level2" data-transition="none">
+<h2>Calculating a Report</h2>
+<pre class="haskell"><code><mark class="block">calculateReport :: Budget -&gt; [Transaction] -&gt; Report</mark>
+calculateReport budget transactions = Report
+  { budgetProfit = budgetProfit&#39;
+  , netProfit    = netProfit&#39;
+  , difference   = netProfit&#39; - budgetProfit&#39;
+  }
+ where
+  budgetProfit&#39; = budgetIncome budget - budgetExpenditure budget
+  netProfit&#39;    = getSum (foldMap asProfit transactions)
+  asProfit (Sale     m) = pure m
+  asProfit (Purchase m) = pure (negate m)</code></pre>
+</section><section id="calculating-a-report-1" class="slide level2" data-transition="none">
+<h2>Calculating a Report</h2>
+<pre class="haskell"><code>calculateReport :: Budget -&gt; [Transaction] -&gt; Report
+calculateReport budget transactions = <mark class="inline">Report</mark>
+<mark class="inline">  { budgetProfit = budgetProfit&#39;</mark>
+<mark class="inline">  , netProfit    = netProfit&#39;</mark>
+<mark class="inline">  , difference   = netProfit&#39; - budgetProfit&#39;</mark>
+<mark class="inline">  }</mark>
+ where
+  budgetProfit&#39; = budgetIncome budget - budgetExpenditure budget
+  netProfit&#39;    = getSum (foldMap asProfit transactions)
+  asProfit (Sale     m) = pure m
+  asProfit (Purchase m) = pure (negate m)</code></pre>
+</section><section id="calculating-a-report-2" class="slide level2" data-transition="none">
+<h2>Calculating a Report</h2>
+<pre class="haskell"><code>calculateReport :: Budget -&gt; [Transaction] -&gt; Report
+calculateReport budget transactions = Report
+  { budgetProfit = budgetProfit&#39;
+  , netProfit    = netProfit&#39;
+  , difference   = netProfit&#39; - budgetProfit&#39;
+  }
+ where
+<mark class="block">  budgetProfit&#39; = budgetIncome budget - budgetExpenditure budget</mark>
+  netProfit&#39;    = getSum (foldMap asProfit transactions)
+  asProfit (Sale     m) = pure m
+  asProfit (Purchase m) = pure (negate m)</code></pre>
+</section><section id="calculating-a-report-3" class="slide level2" data-transition="none">
+<h2>Calculating a Report</h2>
+<pre class="haskell"><code>calculateReport :: Budget -&gt; [Transaction] -&gt; Report
+calculateReport budget transactions = Report
+  { budgetProfit = budgetProfit&#39;
+  , netProfit    = netProfit&#39;
+  , difference   = netProfit&#39; - budgetProfit&#39;
+  }
+ where
+  budgetProfit&#39; = budgetIncome budget - budgetExpenditure budget
+<mark class="block">  netProfit&#39;    = getSum (foldMap asProfit transactions)</mark>
+  asProfit (Sale     m) = pure m
+  asProfit (Purchase m) = pure (negate m)</code></pre>
+</section><section id="calculating-a-report-4" class="slide level2" data-transition="none">
+<h2>Calculating a Report</h2>
+<pre class="haskell"><code>calculateReport :: Budget -&gt; [Transaction] -&gt; Report
+calculateReport budget transactions = Report
+  { budgetProfit = budgetProfit&#39;
+  , netProfit    = netProfit&#39;
+  , difference   = netProfit&#39; - budgetProfit&#39;
+  }
+ where
+  budgetProfit&#39; = budgetIncome budget - budgetExpenditure budget
+  netProfit&#39;    = getSum (foldMap asProfit transactions)
+<mark class="block">  asProfit (Sale     m) = pure m</mark>
+<mark class="block">  asProfit (Purchase m) = pure (negate m)</mark></code></pre>
+</section><section id="recursively-calculating-reports" class="slide level2">
+<h2>Recursively Calculating Reports</h2>
+<pre class="haskell"><code><mark class="block">calculateProjectReport :: Project -&gt; IO Report</mark>
+calculateProjectReport project =
+  case project of
+    SingleProject p _ -&gt;
+      calculateReport
+      &lt;$&gt; DB.getBudget p
+      &lt;*&gt; DB.getTransactions p
+    ProjectGroup _ projects -&gt;
+      foldMap calculateProjectReport projects</code></pre>
+</section><section id="recursively-calculating-reports-1" class="slide level2" data-transition="none">
+<h2>Recursively Calculating Reports</h2>
+<pre class="haskell"><code>calculateProjectReport :: Project -&gt; IO Report
+calculateProjectReport project =
+  case project of
+<mark class="block">    SingleProject p _ -&gt;</mark>
+<mark class="block">      calculateReport</mark>
+<mark class="block">      &lt;$&gt; DB.getBudget p</mark>
+<mark class="block">      &lt;*&gt; DB.getTransactions p</mark>
+    ProjectGroup _ projects -&gt;
+      foldMap calculateProjectReport projects</code></pre>
+</section><section id="recursively-calculating-reports-2" class="slide level2" data-transition="none">
+<h2>Recursively Calculating Reports</h2>
+<pre class="haskell"><code>calculateProjectReport :: Project -&gt; IO Report
+calculateProjectReport project =
+  case project of
+    SingleProject p _ -&gt;
+      calculateReport
+      &lt;$&gt; DB.getBudget p
+      &lt;*&gt; DB.getTransactions p
+<mark class="block">    ProjectGroup _ projects -&gt;</mark>
+<mark class="block">      foldMap calculateProjectReport projects</mark></code></pre>
+</section><section id="requirements-for-foldmap" class="slide level2 side-track">
+<h2>Requirements for foldMap</h2>
+<ul>
+<li><p>Semigroup (associative binary operation)</p>
+<pre class="haskell"><code>class Semigroup a where
+  (&lt;&gt;) :: a -&gt; a -&gt; a</code></pre></li>
+<li><p>Monoid (Semigroup with identity element)</p>
+<pre class="haskell"><code>class Semigroup a =&gt; Monoid a where
+  mempty  :: a</code></pre></li>
+</ul>
+</section><section id="semigroup-and-monoid-for-report" class="slide level2">
+<h2>Semigroup and Monoid for Report</h2>
+<pre class="haskell"><code>instance Semigroup Report where
+  Report b1 n1 d1 &lt;&gt; Report b2 n2 d2 =
+    Report (b1 + b2) (n1 + n2) (d1 + d2)
+
+instance Monoid Report where
+  mempty = Report 0 0 0
+</code></pre>
+</section><section id="foldmap" class="slide level2 side-track">
+<h2>foldMap</h2>
+<pre class="haskell"><code>foldMap
+  :: (Foldable f, Monoid b)
+  =&gt; <mark class="inline">(a -&gt; b)</mark>
+  -&gt; f a
+  -&gt; b</code></pre>
+</section><section id="foldmap-1" class="slide level2 side-track" data-transition="none">
+<h2>foldMap</h2>
+<pre class="haskell"><code>foldMap
+  :: (Foldable f, Monoid b)
+  =&gt; (a -&gt; b)
+  -&gt; <mark class="inline">f a</mark>
+  -&gt; b</code></pre>
+</section><section id="foldmap-2" class="slide level2 side-track" data-transition="none">
+<h2>foldMap</h2>
+<pre class="haskell"><code>foldMap
+  :: (Foldable f, Monoid b)
+  =&gt; (a -&gt; b)
+  -&gt; f a
+  -&gt; <mark class="inline">b</mark></code></pre>
+</section><section id="foldmap-on-lists" class="slide level2 side-track">
+<h2>foldMap on Lists</h2>
+<p><img data-src="./images/foldMap.svg" style="width:60.0%" /></p>
+</section><section id="recursive-foldmap" class="slide level2">
+<h2>Recursive foldMap</h2>
+<p><img data-src="./images/project-tree-foldmap.svg" style="width:100.0%" /></p>
+</section><section id="printing-projects" class="slide level2">
+<h2>Printing Projects</h2>
+<pre class="haskell"><code><mark class="block">asTree :: Project -&gt; Tree String</mark>
+asTree project =
+  case project of
+    SingleProject (ProjectId p) name -&gt;
+      Node (printf &quot;%s (%d)&quot; name p) []
+    ProjectGroup name projects -&gt;
+      Node (Text.unpack name) (map asTree projects)
+
+prettyProject :: Project -&gt; String
+prettyProject = drawTree . asTree</code></pre>
+</section><section id="printing-projects-1" class="slide level2" data-transition="none">
+<h2>Printing Projects</h2>
+<pre class="haskell"><code>asTree :: Project -&gt; Tree String
+asTree project =
+  case project of
+<mark class="block">    SingleProject (ProjectId p) name -&gt;</mark>
+<mark class="block">      Node (printf &quot;%s (%d)&quot; name p) []</mark>
+    ProjectGroup name projects -&gt;
+      Node (Text.unpack name) (map asTree projects)
+
+prettyProject :: Project -&gt; String
+prettyProject = drawTree . asTree</code></pre>
+</section><section id="printing-projects-2" class="slide level2" data-transition="none">
+<h2>Printing Projects</h2>
+<pre class="haskell"><code>asTree :: Project -&gt; Tree String
+asTree project =
+  case project of
+    SingleProject (ProjectId p) name -&gt;
+      Node (printf &quot;%s (%d)&quot; name p) []
+<mark class="block">    ProjectGroup name projects -&gt;</mark>
+<mark class="block">      Node (Text.unpack name) (map asTree projects)</mark>
+
+prettyProject :: Project -&gt; String
+prettyProject = drawTree . asTree</code></pre>
+</section><section id="defining-a-project" class="slide level2">
+<h2>Defining a Project</h2>
+<pre class="haskell"><code>someProject :: Project
+someProject = ProjectGroup &quot;Sweden&quot; [stockholm, göteborg, malmö]
+  where
+    stockholm = SingleProject 1 &quot;Stockholm&quot;
+    göteborg = SingleProject 2 &quot;Göteborg&quot;
+    malmö = ProjectGroup &quot;Malmö&quot; [city, limhamn]
+    city = SingleProject 3 &quot;Malmö City&quot;
+    limhamn = SingleProject 4 &quot;Limhamn&quot;
+</code></pre>
+</section><section id="printing-projects-in-the-repl" class="slide level2">
+<h2>Printing Projects in the REPL</h2>
+<pre class="shell"><code>&gt; putStrLn (prettyProject someProject)
+Sweden
+|
++- Stockholm (1)
+|
++- Göteborg (2)
+|
+`- Malmö
+   |
+   +- Malmö City (3)
+   |
+   `- Limhamn (4)</code></pre>
+</section><section id="printing-reports" class="slide level2">
+<h2>Printing Reports</h2>
+<pre class="haskell"><code>prettyReport :: Report -&gt; String
+prettyReport r =
+  printf
+    &quot;Budget: %.2f, Net: %.2f, difference: %+.2f&quot;
+    (unMoney (budgetProfit r))
+    (unMoney (netProfit r))
+    (unMoney (difference r))
+</code></pre>
+</section><section id="printing-reports-in-the-repl" class="slide level2">
+<h2>Printing Reports in the REPL</h2>
+<pre class="shell"><code>&gt; r &lt;- calculateProjectReport someProject
+&gt; putStrLn (prettyReport r)
+Budget: -14904.17, Net: 458.03, difference: +15362.20</code></pre>
+</section><section id="what-weve-used-so-far" class="slide level2">
+<h2>What we’ve used so far</h2>
+<ul>
+<li>Basic Haskell data types</li>
+<li>Explicit recursion</li>
+<li>Monoid</li>
+<li>Functor</li>
+<li>Foldable</li>
+</ul>
+</section></section>
+<section><section id="new-requirements" class="title-slide slide level1" data-background="images/uml.jpg"><h1>New Requirements!</h1></section><section id="a-tree-of-reports" class="slide level2">
+<h2>A Tree Of Reports</h2>
+<ul>
+<li>One big report for the entire project is not enough</li>
+<li>The customer needs them for all individual projects</li>
+</ul>
+</section><section id="parameterizing-project" class="slide level2">
+<h2>Parameterizing Project</h2>
+<pre class="haskell"><code>data Project <mark class="inline">a</mark>
+  = SingleProject Text
+                  <mark class="inline">a</mark>
+  | ProjectGroup Text
+                 [Project <mark class="inline">a</mark>]
+  deriving (Show, Eq, Functor, Foldable, Traversable)</code></pre>
+</section><section id="parameterizing-project-1" class="slide level2" data-transition="none">
+<h2>Parameterizing Project</h2>
+<pre class="haskell"><code>data Project a
+  = SingleProject Text
+                  a
+  | ProjectGroup Text
+                 [Project a]
+  deriving (Show, Eq, <mark class="inline">Functor, Foldable, Traversable</mark>)</code></pre>
+</section><section id="traversable" class="slide level2 side-track" data-transition="none">
+<h2>Traversable</h2>
+<pre class="haskell"><code>traverse
+  :: (Traversable t, Applicative f)
+  =&gt; <mark class="inline">(a -&gt; f b)</mark>
+  -&gt; t a
+  -&gt; f (t b)</code></pre>
+</section><section id="traversable-1" class="slide level2 side-track" data-transition="none">
+<h2>Traversable</h2>
+<pre class="haskell"><code>traverse
+  :: (Traversable t, Applicative f)
+  =&gt; (a -&gt; f b)
+  -&gt; <mark class="inline">t a</mark>
+  -&gt; f (t b)</code></pre>
+</section><section id="traversable-2" class="slide level2 side-track" data-transition="none">
+<h2>Traversable</h2>
+<pre class="haskell"><code>traverse
+  :: (Traversable t, Applicative f)
+  =&gt; (a -&gt; f b)
+  -&gt; t a
+  -&gt; <mark class="inline">f (t b)</mark></code></pre>
+</section><section id="example-of-traversable" class="slide level2 side-track">
+<h2>Example of Traversable</h2>
+<pre class="haskell"><code>getDescription :: ProjectId -&gt; IO Text
+
+myProject :: Project ProjectId
+
+example :: IO (Project Text)
+example = traverse getDescription myProject</code></pre>
+</section><section id="calculating-reports-with-traversable" class="slide level2">
+<h2>Calculating Reports with Traversable</h2>
+<pre class="haskell"><code>calculateProjectReports
+  :: <mark class="inline">Project ProjectId</mark>
+<mark class="inline">  -&gt; IO (Project Report)</mark>
+calculateProjectReports =
+  traverse $ \p -&gt;
+    calculateReport
+      &lt;$&gt; DB.getBudget p
+      &lt;*&gt; DB.getTransactions p</code></pre>
+</section><section id="calculating-reports-with-traversable-1" class="slide level2" data-transition="none">
+<h2>Calculating Reports with Traversable</h2>
+<pre class="haskell"><code>calculateProjectReports
+  :: Project ProjectId
+  -&gt; IO (Project Report)
+calculateProjectReports =
+<mark class="block">  traverse $ \p -&gt;</mark>
+<mark class="block">    calculateReport</mark>
+<mark class="block">      &lt;$&gt; DB.getBudget p</mark>
+<mark class="block">      &lt;*&gt; DB.getTransactions p</mark></code></pre>
+</section><section id="accumulating-reports-with-foldable" class="slide level2">
+<h2>Accumulating Reports with Foldable</h2>
+<pre class="haskell"><code>accumulateProjectReport :: Project Report -&gt; Report
+accumulateProjectReport = fold
+</code></pre>
+</section><section id="adapting-the-pretty-printing" class="slide level2">
+<h2>Adapting the Pretty Printing</h2>
+<pre class="haskell"><code>asTree
+  :: <mark class="inline">(a -&gt; String)</mark>
+  -&gt; Project a
+  -&gt; Tree String
+
+prettyProject
+  :: <mark class="inline">(a -&gt; String)</mark>
+  -&gt; Project a
+  -&gt; String</code></pre>
+</section><section id="pretty-printing-the-reports" class="slide level2">
+<h2>Pretty Printing the Reports</h2>
+<pre class="shell"><code>&gt; pr &lt;- calculateProjectReports someProject
+&gt; putStrLn (prettyProject prettyReport pr)
+Sweden
+|
++- Stockholm: Budget: -2259.99, Net: 391.23, difference: +2651.22
+|
++- Göteborg: Budget: -3204.79, Net: -228.31, difference: +2976.48
+|
+`- Malmö
+   |
+   +- Malmö City: Budget: -6958.82, Net: 2811.88, difference: +9770.70
+   |
+   `- Limhamn: Budget: 5856.93, Net: 1941.43, difference: -3915.50</code></pre>
+</section><section id="pretty-printing-the-reports-cont." class="slide level2">
+<h2>Pretty Printing the Reports (cont.)</h2>
+<pre class="shell"><code>&gt; putStrLn (prettyReport (accumulateProjectReport pr))
+Budget: -6566.67, Net: 4916.23, difference: +11482.90</code></pre>
+</section><section id="what-weve-added-to-our-toolbox" class="slide level2">
+<h2>What we’ve added to our toolbox</h2>
+<ul>
+<li>Parameterized Data Type</li>
+<li>Traversable</li>
+</ul>
+</section></section>
+<section><section id="no-thats-not-what-we-want." class="title-slide slide level1" data-background="images/uml.jpg"><h1>“No, that’s not what we want.”</h1></section><section id="actual-requirements" class="slide level2">
+<h2>Actual Requirements</h2>
+<ul>
+<li>The customer wants reporting on <em>all</em> levels:
+<ul>
+<li>project groups</li>
+<li>single projects</li>
+</ul></li>
+<li>We need to change our model again</li>
+</ul>
+</section><section id="parameterizing-project-even-more" class="slide level2">
+<h2>Parameterizing Project Even More</h2>
+<pre class="haskell"><code>data Project <mark class="inline">g</mark> a
+  = SingleProject Text
+            a
+  | ProjectGroup Text
+                 <mark class="inline">g</mark>
+                 [Project <mark class="inline">g</mark> a]
+  deriving (Show, Eq, Functor, Foldable, Traversable)</code></pre>
+</section><section id="calculating-reports-with-writert" class="slide level2">
+<h2>Calculating Reports with WriterT</h2>
+<pre class="haskell"><code>calculateProjectReports
+  :: <mark class="inline">Project g ProjectId</mark>
+<mark class="inline">  -&gt; IO (Project Report Report)</mark>
+calculateProjectReports project =
+  fst &lt;$&gt; runWriterT (calc project)
+  where</code></pre>
+<pre class="haskell"><code>    -- ...</code></pre>
+</section><section id="calculating-reports-with-writert-1" class="slide level2" data-transition="none">
+<h2>Calculating Reports with WriterT</h2>
+<pre class="haskell"><code>calculateProjectReports
+  :: Project g ProjectId
+  -&gt; IO (Project Report Report)
+calculateProjectReports project =
+  fst &lt;$&gt; <mark class="inline">runWriterT (calc project)</mark>
+  where</code></pre>
+<pre class="haskell"><code>    -- ...</code></pre>
+</section><section id="for-a-single-project" class="slide level2">
+<h2>For A Single Project</h2>
+<pre class="haskell"><code>    calc (SingleProject name p) = do
+<mark class="block">      report &lt;- liftIO $</mark>
+<mark class="block">        calculateReport</mark>
+<mark class="block">          &lt;$&gt; DB.getBudget p</mark>
+<mark class="block">          &lt;*&gt; DB.getTransactions p</mark>
+      tell report
+      pure (SingleProject name report)</code></pre>
+</section><section id="for-a-single-project-1" class="slide level2" data-transition="none">
+<h2>For A Single Project</h2>
+<pre class="haskell"><code>    calc (SingleProject name p) = do
+      report &lt;- liftIO $
+        calculateReport
+          &lt;$&gt; DB.getBudget p
+          &lt;*&gt; DB.getTransactions p
+<mark class="block">      tell report</mark>
+      pure (SingleProject name report)</code></pre>
+</section><section id="for-a-single-project-2" class="slide level2" data-transition="none">
+<h2>For A Single Project</h2>
+<pre class="haskell"><code>    calc (SingleProject name p) = do
+      report &lt;- liftIO $
+        calculateReport
+          &lt;$&gt; DB.getBudget p
+          &lt;*&gt; DB.getTransactions p
+      tell report
+<mark class="block">      pure (SingleProject name report)</mark></code></pre>
+</section><section id="for-a-project-group" class="slide level2">
+<h2>For a Project Group</h2>
+<pre class="haskell"><code>    calc (ProjectGroup name _ projects) = do
+      <mark class="inline">(projects&#39;, report) &lt;- listen (traverse calc projects)</mark>
+      pure (ProjectGroup name report projects&#39;)</code></pre>
+</section><section id="adapting-the-pretty-printing-1" class="slide level2">
+<h2>Adapting the Pretty Printing</h2>
+<pre class="haskell"><code>asTree
+  :: <mark class="inline">(g -&gt; String)</mark>
+  -&gt; (a -&gt; String)
+  -&gt; Project g a
+  -&gt; Tree String</code></pre>
+<pre class="haskell"><code>prettyProject
+  :: <mark class="inline">(g -&gt; String)</mark>
+  -&gt; (a -&gt; String)
+  -&gt; Project g a
+  -&gt; String</code></pre>
+</section><section id="pretty-printing-the-reports-1" class="slide level2">
+<h2>Pretty Printing the Reports</h2>
+<pre class="shell"><code>&gt; pr &lt;- calculateProjectReports someProject
+&gt; putStrLn (prettyProject prettyReport prettyReport pr)
+Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
+|
++- Stockholm: Budget: -3313.83, Net: -805.37, difference: +2508.46
+|
++- Göteborg: Budget: -422.48, Net: +1479.00, difference: +1901.48
+|
+`- Malmö: Budget: -5541.79, Net: +3978.18, difference: +9519.97
+   |
+   +- Malmö City: Budget: -4069.45, Net: +2185.02, difference: +6254.47
+   |
+   `- Limhamn: Budget: -1472.34, Net: +1793.16, difference: +3265.50</code></pre>
+</section><section id="even-more-learnings" class="slide level2">
+<h2>Even More Learnings</h2>
+<ul>
+<li>Explicit recursion might still be necessary</li>
+<li>The <code>WriterT</code> monad transformer</li>
+<li>There are many ways to leverage <code>Monoid</code></li>
+</ul>
+</section><section id="remaining-issues" class="slide level2">
+<h2>Remaining Issues</h2>
+<ul>
+<li>Explicit recursion can, with large data types, be error-prone
+<ul>
+<li>Recursion schemes is an <em>advanced</em> solution</li>
+</ul></li>
+<li>Current <code>Project</code> type has a hidden coupling to the reporting module
+<ul>
+<li>The <code>g</code> and <code>a</code> parameters are only there for reporting</li>
+</ul></li>
+</ul>
+</section></section>
+<section><section id="summary" class="title-slide slide level1"><h1>Summary</h1></section><section id="what-we-havent-covered" class="slide level2">
+<h2>What we haven’t covered</h2>
+<ul>
+<li>Validation</li>
+<li>Writes</li>
+<li>Cyclic references</li>
+<li>Complex database queries</li>
+<li>Pretty front-end</li>
+</ul>
+</section><section id="domain-modeling-in-haskell" class="slide level2">
+<h2>Domain Modeling in Haskell</h2>
+<ul>
+<li>Use Haskell data types
+<ul>
+<li>As the basis of your domain model</li>
+<li>To structure computation</li>
+</ul></li>
+<li>Leverage great abstractions
+<ul>
+<li>Functor</li>
+<li>Semigroup</li>
+<li>Monoid</li>
+<li>Foldable</li>
+<li>Traversable</li>
+</ul></li>
+<li>Enjoy evolving and refactoring existing code</li>
+</ul>
+</section><section id="next-steps" class="slide level2">
+<h2>Next Steps</h2>
+<ul>
+<li><a href="https://haskell-at-work.com/">haskell-at-work.com</a> screencasts:
+<ul>
+<li><a href="https://haskell-at-work.com/episodes/2018-01-19-domain-modelling-with-haskell-data-structures.html">Data Structures</a></li>
+<li><a href="https://haskell-at-work.com/episodes/2018-01-22-domain-modelling-with-haskell-generalizing-with-foldable-and-traversable.html">Generalizing with Foldable and Traversable</a></li>
+<li><a href="https://haskell-at-work.com/episodes/2018-02-02-domain-modelling-with-haskell-accumulating-with-writert.html">Accumulating with WriterT</a></li>
+<li><a href="https://haskell-at-work.com/episodes/2018-02-11-domain-modelling-with-haskell-factoring-out-recursion.html">Factoring Out Recursion</a></li>
+</ul></li>
+<li><a href="https://typeclasses.com/">Type Classes (online Haskell courses)</a></li>
+</ul>
+</section><section id="thank-you" class="slide level2">
+<h2>Thank you!</h2>
+<ul>
+<li>Twitter: <a href="http://twitter.com/owickstrom">@owickstrom</a></li>
+<li>Website: <a href="https://wickstrom.tech">https://wickstrom.tech</a></li>
+<li>Credits:
+<ul>
+<li>By Jacqui Barker - Gnarly Old TreeUploaded by Jacopo Werther, CC BY 2.0, https://commons.wikimedia.org/w/index.php?curid=26259218</li>
+<li><a href="https://imgur.com/gallery/it5RlpT">Maximum overbusiness</a></li>
+<li><a href="https://www.flickr.com/photos/acehoward/8675813357">UML Diagram</a></li>
+</ul></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'fast', // default/fast/slow
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

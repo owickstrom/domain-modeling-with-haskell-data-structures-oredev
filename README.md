@@ -1,6 +1,6 @@
-# Writing a Screencast Video Editor in Haskell
+# Domain Modeling with Haskell Data Structures
 
-A talk for Lambda World Cadiz 2018
+A talk given at Oredev 2018.
 
 ## Building
 

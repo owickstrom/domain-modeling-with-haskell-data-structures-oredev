@@ -29,6 +29,8 @@ classoption: dvipsnames
 
 ## Haskell
 
+![Haskell logo](images/haskell-logo.svg){width=40% .float-right}
+
 * All the flexibility we need
     - Sum types
     - Product types
@@ -60,6 +62,12 @@ classoption: dvipsnames
 # Haskell Refresher
 
 ## Product Types
+
+```{.haskell}
+data AccountBalance = AccountBalance Money Date
+```
+
+## Product Types with Record Syntax
 
 ```{.haskell include=src/listings/intro/src/Intro.hs snippet=product-type-1}
 ```
@@ -123,6 +131,8 @@ Oskar Wickström ordering Omelette.
 ```
 
 # Example: Project Management System
+
+# {background=images/overbusiness.gif}
 
 ## Project Management
 
@@ -317,7 +327,7 @@ Budget: -14904.17, Net: 458.03, difference: +15362.20
 * Functor
 * Foldable
 
-# New Requirements!
+# New Requirements!{background=images/uml.jpg}
 
 ## A Tree Of Reports
 
@@ -331,7 +341,7 @@ Budget: -14904.17, Net: 458.03, difference: +15362.20
 
 ## Parameterizing Project{transition=none}
 
-``` {.haskell include=src/listings/foldable-traversable/src/Project.hs snippet=project emphasize=6:32-6:52}
+``` {.haskell include=src/listings/foldable-traversable/src/Project.hs snippet=project emphasize=6:23-6:52}
 ```
 
 ## Traversable{.side-track transition=none}
@@ -393,7 +403,7 @@ example = traverse getDescription myProject
 
 ## Adapting the Pretty Printing
 
-``` {.haskell include=src/listings/foldable-traversable/src/PrettyPrint.hs snippet=pretty-printing}
+``` {.haskell include=src/listings/foldable-traversable/src/PrettyPrint.hs snippet=pretty-printing emphasize=2:6-2:99,7:6-7:99}
 ```
 
 ## Pretty Printing the Reports
@@ -426,7 +436,7 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 * Parameterized Data Type
 * Traversable
 
-# "No, that's not what we want."
+# "No, that's not what we want."{background=images/uml.jpg}
 
 ## Actual Requirements
 
@@ -480,10 +490,10 @@ Budget: -6566.67, Net: 4916.23, difference: +11482.90
 
 ## Adapting the Pretty Printing
 
-``` {.haskell include=src/listings/writert/src/PrettyPrint.hs snippet=asTree}
+``` {.haskell include=src/listings/writert/src/PrettyPrint.hs snippet=asTree emphasize=2:6-2:99}
 ```
 
-``` {.haskell include=src/listings/writert/src/PrettyPrint.hs snippet=prettyProject}
+``` {.haskell include=src/listings/writert/src/PrettyPrint.hs snippet=prettyProject emphasize=2:6-2:99}
 ```
 
 ## Pretty Printing the Reports
@@ -513,14 +523,15 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 ## Remaining Issues
 
 * Explicit recursion can, with large data types, be error-prone
+    - Recursion schemes is an *advanced* solution
 * Current `Project` type has a hidden coupling to the reporting module
     - The `g` and `a` parameters are only there for reporting
-* Recursion schemes is an *advanced* solution
 
 # Summary
 
 ## What we haven't covered
 
+* Validation
 * Writes
 * Cyclic references
 * Complex database queries
@@ -541,11 +552,18 @@ Sweden: Budget: -9278.10, Net: +4651.81, difference: +13929.91
 
 ## Next Steps
 
-* [Haskell at Work](https://haskell-at-work.com/) screencasts:
+* [haskell-at-work.com](https://haskell-at-work.com/) screencasts:
   - [Data Structures](https://haskell-at-work.com/episodes/2018-01-19-domain-modelling-with-haskell-data-structures.html)
   - [Generalizing with Foldable and Traversable](https://haskell-at-work.com/episodes/2018-01-22-domain-modelling-with-haskell-generalizing-with-foldable-and-traversable.html)
   - [Accumulating with WriterT](https://haskell-at-work.com/episodes/2018-02-02-domain-modelling-with-haskell-accumulating-with-writert.html)
   - [Factoring Out Recursion](https://haskell-at-work.com/episodes/2018-02-11-domain-modelling-with-haskell-factoring-out-recursion.html)
 * [Type Classes (online Haskell courses)](https://typeclasses.com/)
 
-# Thank You!
+## Thank you!
+
+* Twitter: [\@owickstrom](http://twitter.com/owickstrom)
+* Website: [https://wickstrom.tech](https://wickstrom.tech)
+* Credits:
+    - By Jacqui Barker - Gnarly Old TreeUploaded by Jacopo Werther, CC BY 2.0, https://commons.wikimedia.org/w/index.php?curid=26259218
+    - [Maximum overbusiness](https://imgur.com/gallery/it5RlpT)
+    - [UML Diagram](https://www.flickr.com/photos/acehoward/8675813357)

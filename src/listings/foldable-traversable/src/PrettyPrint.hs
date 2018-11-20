@@ -10,7 +10,17 @@ import           Project
 import           Reporting
 
 -- start snippet pretty-printing
-asTree :: (a -> String) -> Project a -> Tree String
+asTree
+  :: (a -> String)
+  -> Project a
+  -> Tree String
+
+prettyProject
+  :: (a -> String)
+  -> Project a
+  -> String
+-- end snippet pretty-printing
+
 asTree prettyValue project =
   case project of
     SingleProject name x ->
@@ -18,9 +28,7 @@ asTree prettyValue project =
     ProjectGroup name projects ->
       Node (Text.unpack name) (map (asTree prettyValue) projects)
 
-prettyProject :: (a -> String) -> Project a -> String
 prettyProject prettyValue = drawTree . asTree prettyValue
--- end snippet pretty-printing
 
 prettyReport :: Report -> String
 prettyReport r =

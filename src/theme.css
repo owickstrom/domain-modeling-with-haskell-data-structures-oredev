@@ -336,6 +336,18 @@ p.author, p.date {
   margin: 0 0 1em 1em;
 }
 
+/* Title slide */
+.reveal #title-slide .title {
+  color: #fff;
+}
+.reveal #title-slide .author,
+.reveal #title-slide .date {
+  color: #bbb;
+}
+.reveal .backgrounds .slide-background:first-child .slide-background-content {
+  background-image: url(/images/title.jpg);
+}
+
 /*********************************************
  * NAVIGATION CONTROLS
  *********************************************/

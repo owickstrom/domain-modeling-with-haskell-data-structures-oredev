@@ -345,7 +345,7 @@ p.author, p.date {
   color: #bbb;
 }
 .reveal .backgrounds .slide-background:first-child .slide-background-content {
-  background-image: url(../images/title.jpg);
+  background-image: url(../../../images/title.jpg);
 }
 
 /*********************************************

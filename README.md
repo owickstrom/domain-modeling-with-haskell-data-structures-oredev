@@ -1,6 +1,6 @@
 # Domain Modeling with Haskell Data Structures
 
-A talk given at Oredev 2018.
+A talk given at Øredev 2018.
 
 ## Building
 

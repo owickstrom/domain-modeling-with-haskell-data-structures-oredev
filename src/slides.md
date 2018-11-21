@@ -132,7 +132,7 @@ Oskar Wickström ordering Omelette.
 
 # Example: Project Management System
 
-# {background=images/overbusiness.gif}
+# {background=images/overbusiness.gif background-size=contain}
 
 ## Project Management
 
